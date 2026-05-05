@@ -1,0 +1,17 @@
+sentence-transformers
+transformers
+chromadb
+streamlit
+fastapi
+uvicorn
+requests
+beautifulsoup4
+pandas
+openpyxl
+langdetect
+deep-translator
+scikit-learn
+matplotlib
+torch
+pydantic
+watchdog
