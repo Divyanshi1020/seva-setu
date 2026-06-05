@@ -96,13 +96,20 @@ def search(request: SearchRequest):
         raise HTTPException(status_code=400, detail="Query too long. Maximum 500 characters.")
 
     # Detect language
+    SUPPORTED_LANGS = {'hi', 'ta', 'te', 'bn', 'mr', 'gu', 'kn', 'ml', 'en'}
+
     try:
         detected_lang = detect(request.query)
     except:
-        detected_lang = 'en'
+        detected_lang = 'unknown'
+
+    if detected_lang not in SUPPORTED_LANGS:
+        raise HTTPException(
+            status_code=400,
+            detail="Unsupported language. Please query in Hindi, Tamil, Telugu, Bengali, Marathi, Gujarati, Kannada, Malayalam, or English."
+        )
 
     lang_name = LANGUAGE_NAMES.get(detected_lang, 'English')
-
     # Generate query embedding
     query_vector = model.encode(
         request.query,

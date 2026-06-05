@@ -179,6 +179,49 @@ hr {
     border-top: 1px solid #E8E4DC !important;
     margin: 16px 0 !important;
 }
+/* ── Responsive fixes ── */
+.block-container {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    max-width: 100% !important;
+}
+
+div[data-testid="stMainBlockContainer"] {
+    padding: 0 !important;
+    max-width: 100% !important;
+}
+
+/* Main content area responsive padding */
+@media screen and (max-width: 1024px) {
+    section[data-testid="stSidebar"] {
+        min-width: 220px !important;
+        width: 220px !important;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    section[data-testid="stSidebar"] {
+        min-width: 180px !important;
+        width: 180px !important;
+    }
+}
+
+/* Prevent content collapse */
+div[data-testid="stVerticalBlock"] {
+    min-width: 0 !important;
+    width: 100% !important;
+}
+
+/* Fix columns not wrapping */
+div[data-testid="column"] {
+    min-width: 0 !important;
+    overflow: hidden !important;
+}
+
+/* Content padding responsive */
+div[data-testid="stMainBlockContainer"] > div {
+    padding: 20px 24px !important;
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -223,26 +266,27 @@ def translate_to(text, lang_code):
 # ══════════════════════════════════════════════════════════
 with st.sidebar:
 
-    st.markdown("""
-    <div style="font-family:'EB Garamond',serif;font-size:20px;
-    font-weight:700;color:#1a3a5c;margin-bottom:4px;">
-    Search Filters
-    </div>
-    <div style="height:1px;background:#E8E4DC;margin:12px 0 20px;"></div>
-    """, unsafe_allow_html=True)
+    #st.markdown("""
+    #<div style="font-family:'EB Garamond',serif;#font-size:20px;
+    #font-weight:700;color:#1a3a5c;margin-bottom:4px;">
+    #Search Filters
+    #</div>
+    #<div style="height:1px;background:#E8E4DC;margin:12px 0 20px;"></div>
+    #""", unsafe_allow_html=True)
 
-    category = st.radio(
-        "CATEGORY",
-        options=["All", "Agriculture", "Health", "Education",
-                 "Housing", "Employment", "Finance", "Identity"]
-    )
+    #category = st.radio(
+        #"CATEGORY",
+        #options=["All", "Agriculture", "Health", "Education",
+               # "Housing", "Employment", "Finance", "Identity"]
+    #)
+    category ="All"
 
     st.markdown('<div style="height:1px;background:#E8E4DC;margin:16px 0;"></div>',
                 unsafe_allow_html=True)
 
     n_results = st.slider("NUMBER OF RESULTS", min_value=1, max_value=10, value=5)
 
-    st.markdown('<div style="height:1px;background:#E8E4DC;margin:16px 0;"></div>',
+    st.markdown('<div style="height:1px;background:#E8E4DC;margin:16px 0; margin-top:0px;"></div>',
                 unsafe_allow_html=True)
 
     st.markdown("""
@@ -276,7 +320,7 @@ with st.sidebar:
     <div style="font-size:10px;letter-spacing:1.5px;text-transform:uppercase;
     color:#999;font-weight:600;margin-bottom:10px;">About</div>
     <div style="font-size:11px;color:#666;line-height:1.7;">
-    Powered by <strong style="color:#1a3a5c;">MuRIL</strong> — Google's
+    Powered by <strong style="color:#1a3a5c;">MuRIL</strong> - Google's
     multilingual AI model trained on 17 Indian languages using
     <strong style="color:#1a3a5c;">Cross-Lingual Transfer Learning.</strong>
     <br><br>
@@ -294,8 +338,8 @@ st.markdown("""
 <div style="background:#1a3a5c;color:white;padding:9px 40px;
 font-size:12px;display:flex;align-items:center;gap:14px;
 font-family:'DM Sans',sans-serif;letter-spacing:0.4px;">
-    <span style="font-size:16px;">🇮🇳</span>
-    <span style="opacity:0.85;">Government of India — Digital India Initiative</span>
+    <span style="font-size:16px;"></span>
+    <span style="opacity:0.85;">Government of India - Digital India Initiative</span>
     <span style="margin-left:auto;opacity:0.55;font-size:11px;">
     Powered by MuRIL · Cross-Lingual AI · Built for Bharat</span>
 </div>
@@ -338,10 +382,14 @@ margin-bottom:10px;">Search for any government scheme in your language</div>
 """, unsafe_allow_html=True)
 
 # Search bar
+if "search_query" not in st.session_state:
+    st.session_state.search_query = ""
+
 query = st.text_input(
     "query",
-    placeholder="e.g.  farmer scheme  ·  राशन कार्ड  ·  ரேஷன் கார்டு  ·  স্বাস্থ্য বীমা  ·  ఆవాస్ యోజన",
-    label_visibility="collapsed"
+    placeholder="e.g.  farmer scheme  ·  राशन कार्ड  ·  ரேஷன் கார்டு  ·  வாஸ்த்ய பீமா  ·  ఆవాస్ యోజన",
+    label_visibility="collapsed",
+    key="search_query"
 )
 
 # Example buttons
@@ -353,30 +401,70 @@ color:#bbb;margin:14px 0 8px;font-weight:600;">Try an example</div>
 bc1, bc2, bc3, bc4, bc5, bc6 = st.columns([1, 1, 1.3, 1, 1, 3])
 with bc1:
     if st.button("PM Kisan"):
-        query = "farmer income support scheme"
+        st.session_state.search_query = "farmer income support scheme"
+        st.rerun()
 with bc2:
     if st.button("आयुष्मान"):
-        query = "गरीब परिवारों के लिए स्वास्थ्य बीमा"
+        st.session_state.search_query = "गरीब परिवारों के लिए स्वास्थ्य बीमा"
+        st.rerun()
 with bc3:
     if st.button("வீட்டு திட்டம்"):
-        query = "வீடு கட்ட அரசு உதவி"
+        st.session_state.search_query = "வீடு கட்ட அரசு உதவி"
+        st.rerun()
 with bc4:
     if st.button("বৃত্তি"):
-        query = "ছাত্রদের জন্য বৃত্তি"
+        st.session_state.search_query = "ছাত্রদের জন্য বৃত্তি"
+        st.rerun()
 with bc5:
     if st.button("ఉపాధి"):
-        query = "యువతకు నైపుణ్య శిక్షణ"
+        st.session_state.search_query = "యువతకు నైపుణ్య శిక్షణ"
+        st.rerun()
 
 st.markdown('<div style="height:1px;background:#E8E4DC;margin:20px 0;"></div>',
             unsafe_allow_html=True)
 
 # Results
 if query:
-    with st.spinner("Searching across all government schemes..."):
+    import unicodedata
+
+    INDIAN_SCRIPTS = {'Devanagari', 'Tamil', 'Telugu', 'Bengali', 'Gujarati', 'Kannada', 'Malayalam'}
+
+    def get_script_type(text):
+        found = set()
+        for ch in text:
+            if ch.isspace() or not ch.isalpha():
+                continue
+            name = unicodedata.name(ch, '')
+            word = name.split(' ')[0].capitalize()
+            if word in INDIAN_SCRIPTS:
+                found.add('indian')
+            elif word == 'Latin':
+                found.add('latin')
+            else:
+                return 'invalid'
+        if not found:
+            return 'invalid'
+        if len(found) > 1:
+            return 'invalid'
+        return found.pop()
+
+    script = get_script_type(query)
+
+    if script == 'invalid':
+        st.error("Invalid query. Please type in Hindi, Tamil, Telugu, Bengali, Marathi, Gujarati, Kannada, Malayalam, or English.")
+        st.stop()
+
+    if script == 'latin':
+        detected_lang = 'en'
+    else:
         try:
             detected_lang = detect(query)
         except:
-            detected_lang = 'en'
+            detected_lang = 'hi'
+        if detected_lang not in {'hi', 'ta', 'te', 'bn', 'mr', 'gu', 'kn', 'ml'}:
+            detected_lang = 'hi'
+
+    with st.spinner("Searching across all government schemes..."):
         lang_name = LANGUAGE_NAMES.get(detected_lang, 'English')
         results = search_schemes(query, n_results, category)
 
