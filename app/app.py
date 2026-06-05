@@ -266,13 +266,9 @@ def translate_to(text, lang_code):
 # ══════════════════════════════════════════════════════════
 with st.sidebar:
 
-    #st.markdown("""
-    #<div style="font-family:'EB Garamond',serif;#font-size:20px;
-    #font-weight:700;color:#1a3a5c;margin-bottom:4px;">
-    #Search Filters
-    #</div>
-    #<div style="height:1px;background:#E8E4DC;margin:12px 0 20px;"></div>
-    #""", unsafe_allow_html=True)
+    st.markdown("""
+    <div style="height:1px;background:#E8E4DC;></div>
+    """, unsafe_allow_html=True)
 
     #category = st.radio(
         #"CATEGORY",
